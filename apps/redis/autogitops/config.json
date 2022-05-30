@@ -1,0 +1,8 @@
+{
+    "name": "redis",
+    "namespace": "redis",
+    "imageName": "redis",
+    "imageTag": "latest",
+    "targetDir": "bootstrap",
+    "targets": [ ]
+}
