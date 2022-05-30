@@ -2,6 +2,7 @@
 
 echo "$(date +'%Y-%m-%d %H:%M:%S')  flux bootstrap start" >> "$HOME/status"
 
+# make sure flux is installed
 if [ ! "$(flux --version)" ]
 then
   echo "$(date +'%Y-%m-%d %H:%M:%S')  flux not found" >> "$HOME/status"
@@ -9,6 +10,7 @@ then
   exit 1
 fi
 
+# make sure the branch is set
 if [ -z "$AKDC_BRANCH" ]
 then
   echo "$(date +'%Y-%m-%d %H:%M:%S')  AKDC_BRANCH not set" >> "$HOME/status"
@@ -17,6 +19,7 @@ then
   exit 1
 fi
 
+# make sure cluster name is set
 if [ -z "$AKDC_CLUSTER" ]
 then
   echo "$(date +'%Y-%m-%d %H:%M:%S')  AKDC_CLUSTER not set" >> "$HOME/status"
@@ -25,6 +28,7 @@ then
   exit 1
 fi
 
+# make sure PAT is set
 if [ ! -f /home/akdc/.ssh/akdc.pat ]
 then
   echo "$(date +'%Y-%m-%d %H:%M:%S')  akdc.pat not found" >> "$HOME/status"
@@ -33,10 +37,14 @@ then
   exit 1
 fi
 
+git pull
+
 status_code=1
 retry_count=0
 
-until [ $status_code == 0 ]; do
+# retry loop
+until [ $status_code == 0 ]
+do
 
   echo "flux retries: $retry_count"
   echo "$(date +'%Y-%m-%d %H:%M:%S')  flux retries: $retry_count" >> "$HOME/status"
@@ -48,6 +56,13 @@ until [ $status_code == 0 ]; do
 
   retry_count=$((retry_count + 1))
 
+  # fail after 10 retries
+  if [ $retry_count -gt 10 ]
+  then
+    exit 1
+  fi
+
+  # run flux bootstrap
   flux bootstrap git \
   --url "https://github.com/$AKDC_REPO" \
   --branch "$AKDC_BRANCH" \
@@ -61,18 +76,21 @@ done
 echo "adding flux sources"
 echo "$(date +'%Y-%m-%d %H:%M:%S')  adding flux sources" >> "$HOME/status"
 
+# add flux secret
 flux create secret git gitops \
   -n flux-system \
   --url https://github.com/bartr/coral-fleet \
   -u gitops \
   -p "$AKDC_PAT"
 
+# add flux source
 flux create source git gitops \
 --namespace flux-system \
 --url "https://github.com/$AKDC_REPO" \
 --branch "$AKDC_BRANCH" \
 --secret-ref gitops
 
+# add flux kustomizations
 flux create kustomization bootstrap \
 --namespace flux-system \
 --source GitRepository/gitops \
@@ -87,9 +105,9 @@ flux create kustomization apps \
 --prune true \
 --interval 1m
 
-# git pull
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/namespace.yaml"
 # flux create secret git flux-system -n flux-system --url https://github.com/bartr/coral-fleet -u gitops -p "$AKDC_PAT"
+# flux create secret git gitops -n flux-system --url https://github.com/bartr/coral-fleet -u gitops -p "$AKDC_PAT"
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/controllers.yaml"
 # sleep 3
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/source.yaml"
@@ -97,10 +115,11 @@ flux create kustomization apps \
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/*.yaml"
 # sleep 5
 
+# force flux to sync
 flux reconcile source git gitops
 
+# display results
 kubectl get pods -A
-
 flux get kustomizations
 
 echo "$(date +'%Y-%m-%d %H:%M:%S')  flux bootstrap complete" >> "$HOME/status"
