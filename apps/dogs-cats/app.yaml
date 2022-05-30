@@ -4,5 +4,5 @@ deployments:
     target: dev
     clusters: 0
     values:
-      image: ghcr.io/cse-labs/vote:latest
+      image: ghcr.io/cse-labs/go-vote:latest
       port: 8080
