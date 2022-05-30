@@ -61,11 +61,17 @@ done
 echo "adding flux sources"
 echo "$(date +'%Y-%m-%d %H:%M:%S')  adding flux sources" >> "$HOME/status"
 
+flux create secret git gitops \
+  -n flux-system \
+  --url https://github.com/bartr/coral-fleet \
+  -u gitops \
+  -p "$AKDC_PAT"
+
 flux create source git gitops \
 --namespace flux-system \
 --url "https://github.com/$AKDC_REPO" \
 --branch "$AKDC_BRANCH" \
---secret-ref flux-system
+--secret-ref gitops
 
 flux create kustomization bootstrap \
 --namespace flux-system \
@@ -83,7 +89,7 @@ flux create kustomization apps \
 
 # git pull
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/namespace.yaml"
-# flux create secret git flux-system -n flux-system --url https://github.com/retaildevcrews/bartr-fleet -u gitops -p "$AKDC_PAT"
+# flux create secret git flux-system -n flux-system --url https://github.com/bartr/coral-fleet -u gitops -p "$AKDC_PAT"
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/controllers.yaml"
 # sleep 3
 # kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/source.yaml"
