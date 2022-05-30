@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$AKDC_SSL" = "" ]
+then
+    curl -s http://"$AKDC_FQDN/heartbeat/17"
+else
+    curl -s https://"$AKDC_FQDN/heartbeat/17"
+fi

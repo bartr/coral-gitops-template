@@ -1,0 +1,11 @@
+{
+    "imageName": "ghcr.io/cse-labs/go-vote",
+    "imageTag": "latest",
+    "key1": "Beach",
+    "key2": "Mountains",
+    "name": "vacation",
+    "namespace": "vacation",
+    "targetDir": "apps",
+    "targets": null,
+    "title": "Where's our next vacation?"
+}

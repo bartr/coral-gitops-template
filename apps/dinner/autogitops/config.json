@@ -1,0 +1,11 @@
+{
+    "imageName": "ghcr.io/cse-labs/go-vote",
+    "imageTag": "latest",
+    "key1": "Steak",
+    "key2": "Chicken",
+    "name": "dinner",
+    "namespace": "dinner",
+    "targetDir": "apps",
+    "targets": null,
+    "title": "What's for dinner?"
+}

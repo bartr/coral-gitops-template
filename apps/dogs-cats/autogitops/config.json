@@ -1,0 +1,13 @@
+{
+    "imageName": "ghcr.io/cse-labs/go-vote",
+    "imageTag": "latest",
+    "key1": "Dogs",
+    "key2": "Cats",
+    "name": "dogs-cats",
+    "namespace": "dogs-cats",
+    "targetDir": "apps",
+    "targets": [
+        "tags:prod"
+    ],
+    "title": "Dog's Rule!"
+}

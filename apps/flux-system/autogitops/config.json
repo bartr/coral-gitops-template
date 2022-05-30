@@ -1,0 +1,6 @@
+{
+    "name": "flux-system",
+    "namespace": "flux-system",
+    "targetDir": "flux",
+    "targets": [ ]
+}
