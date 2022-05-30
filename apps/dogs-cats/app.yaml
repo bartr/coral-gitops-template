@@ -1,0 +1,8 @@
+template: pib-service
+deployments:
+  development:
+    target: dev
+    clusters: 0
+    values:
+      image: ghcr.io/cse-labs/vote:latest
+      port: 8080
