@@ -6,8 +6,6 @@
     "name": "dogs-cats",
     "namespace": "dogs-cats",
     "targetDir": "apps",
-    "targets": [
-        "tags:prod"
-    ],
+    "targets": [ ],
     "title": "Dog's Rule!"
 }

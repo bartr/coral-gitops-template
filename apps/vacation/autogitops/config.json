@@ -6,6 +6,6 @@
     "name": "vacation",
     "namespace": "vacation",
     "targetDir": "apps",
-    "targets": null,
+    "targets": [ ],
     "title": "Where's our next vacation?"
 }

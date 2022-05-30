@@ -6,6 +6,6 @@
     "name": "dinner",
     "namespace": "dinner",
     "targetDir": "apps",
-    "targets": null,
+    "targets": [ ],
     "title": "What's for dinner?"
 }
