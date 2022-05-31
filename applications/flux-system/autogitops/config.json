@@ -1,6 +1,7 @@
 {
     "name": "flux-system",
     "namespace": "flux-system",
+    "repo": "yourTenant/yourRepo",
     "targetDir": "flux",
     "targets": [ "all" ]
 }

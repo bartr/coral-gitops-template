@@ -9,4 +9,4 @@ spec:
     branch: demo
   secretRef:
     name: flux-system
-  url: https://github.com/retaildevcrews/bartr-fleet
+  url: https://github.com/{{gitops.repo}}
