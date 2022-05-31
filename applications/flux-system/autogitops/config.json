@@ -1,7 +1,7 @@
 {
     "name": "flux-system",
     "namespace": "flux-system",
-    "repo": "yourTenant/yourRepo",
+    "repo": "microsoft/coral-gitops",
     "targetDir": "flux",
     "targets": [ "all" ]
 }
