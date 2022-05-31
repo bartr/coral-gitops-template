@@ -19,7 +19,7 @@ jobs:
 
     - name: Docker pull
       run: |
-        docker pull ghcr.io/retaildevcrews/autogitops:beta
+        docker pull ghcr.io/retaildevcrews/autogitops:0.4.2
 
     - name: GitOps Deploy
       run: |
@@ -27,4 +27,4 @@ jobs:
         --name ago \
         --rm \
         -v $(pwd):/ago \
-        ghcr.io/retaildevcrews/autogitops:beta
+        ghcr.io/retaildevcrews/autogitops:0.4.2
