@@ -73,9 +73,9 @@ rm -f k9s_Linux_x86_64.tar.gz
 
 # upgrade Ubuntu
 echo "$(date +'%Y-%m-%d %H:%M:%S')  upgrading" >> "$HOME/status"
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt-get autoremove -y
+# sudo apt-get update
+# sudo apt-get upgrade -y
+# sudo apt-get autoremove -y
 
 sudo chown -R "${AKDC_ME}:${AKDC_ME}" "$HOME"
 {
