@@ -39,81 +39,81 @@ fi
 
 git pull
 
-status_code=1
-retry_count=0
+# status_code=1
+# retry_count=0
 
-# retry loop
-until [ $status_code == 0 ]
-do
+# # retry loop
+# until [ $status_code == 0 ]
+# do
 
-  echo "flux retries: $retry_count"
-  echo "$(date +'%Y-%m-%d %H:%M:%S')  flux retries: $retry_count" >> "$HOME/status"
+#   echo "flux retries: $retry_count"
+#   echo "$(date +'%Y-%m-%d %H:%M:%S')  flux retries: $retry_count" >> "$HOME/status"
 
-  if [ $retry_count -gt 0 ]
-  then
-    sleep $((RANDOM % 30+15))
-  fi
+#   if [ $retry_count -gt 0 ]
+#   then
+#     sleep $((RANDOM % 30+15))
+#   fi
 
-  retry_count=$((retry_count + 1))
+#   retry_count=$((retry_count + 1))
 
-  # fail after 10 retries
-  if [ $retry_count -gt 10 ]
-  then
-    exit 1
-  fi
+#   # fail after 10 retries
+#   if [ $retry_count -gt 10 ]
+#   then
+#     exit 1
+#   fi
 
-  # run flux bootstrap
-  flux bootstrap git \
-  --url "https://github.com/$AKDC_REPO" \
-  --branch "$AKDC_BRANCH" \
-  --password "$(cat /home/akdc/.ssh/akdc.pat)" \
-  --token-auth true \
-  --path "./clusters/$AKDC_CLUSTER"
+#   # run flux bootstrap
+#   flux bootstrap git \
+#   --url "https://github.com/$AKDC_REPO" \
+#   --branch "$AKDC_BRANCH" \
+#   --password "$(cat /home/akdc/.ssh/akdc.pat)" \
+#   --token-auth true \
+#   --path "./clusters/$AKDC_CLUSTER"
 
-  status_code=$?
-done
+#   status_code=$?
+# done
 
-echo "adding flux sources"
-echo "$(date +'%Y-%m-%d %H:%M:%S')  adding flux sources" >> "$HOME/status"
+# echo "adding flux sources"
+# echo "$(date +'%Y-%m-%d %H:%M:%S')  adding flux sources" >> "$HOME/status"
 
-# add flux secret
-flux create secret git gitops \
-  -n flux-system \
-  --url https://github.com/bartr/coral-fleet \
-  -u gitops \
-  -p "$AKDC_PAT"
+# # add flux secret
+# flux create secret git gitops \
+#   -n flux-system \
+#   --url https://github.com/bartr/coral-fleet \
+#   -u gitops \
+#   -p "$AKDC_PAT"
 
-# add flux source
-flux create source git gitops \
---namespace flux-system \
---url "https://github.com/$AKDC_REPO" \
---branch "$AKDC_BRANCH" \
---secret-ref gitops
+# # add flux source
+# flux create source git gitops \
+# --namespace flux-system \
+# --url "https://github.com/$AKDC_REPO" \
+# --branch "$AKDC_BRANCH" \
+# --secret-ref gitops
 
-# add flux kustomizations
-flux create kustomization bootstrap \
---namespace flux-system \
---source GitRepository/gitops \
---path "./deploy/bootstrap/$AKDC_CLUSTER" \
---prune true \
---interval 1m
+# # add flux kustomizations
+# flux create kustomization bootstrap \
+# --namespace flux-system \
+# --source GitRepository/gitops \
+# --path "./deploy/bootstrap/$AKDC_CLUSTER" \
+# --prune true \
+# --interval 1m
 
-flux create kustomization apps \
---namespace flux-system \
---source GitRepository/gitops \
---path "./deploy/apps/$AKDC_CLUSTER" \
---prune true \
---interval 1m
+# flux create kustomization apps \
+# --namespace flux-system \
+# --source GitRepository/gitops \
+# --path "./deploy/apps/$AKDC_CLUSTER" \
+# --prune true \
+# --interval 1m
 
-# kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/namespace.yaml"
-# flux create secret git flux-system -n flux-system --url https://github.com/bartr/coral-fleet -u gitops -p "$AKDC_PAT"
-# flux create secret git gitops -n flux-system --url https://github.com/bartr/coral-fleet -u gitops -p "$AKDC_PAT"
-# kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/controllers.yaml"
-# sleep 3
-# kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/source.yaml"
-# sleep 2
-# kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/*.yaml"
-# sleep 5
+flux create secret git flux-system -n flux-system --url https://github.com/microsoft/coral-gitops -u gitops -p "$AKDC_PAT"
+flux create secret git gitops -n flux-system --url https://github.com/microsoft/coral-gitops -u gitops -p "$AKDC_PAT"
+
+kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/controllers.yaml"
+sleep 3
+kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/source.yaml"
+sleep 2
+kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/*.yaml"
+sleep 5
 
 # force flux to sync
 flux reconcile source git gitops

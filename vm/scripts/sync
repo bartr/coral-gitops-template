@@ -2,4 +2,3 @@
 
 # run flux reconcile
 flux reconcile source git gitops
-flux reconcile source git flux-system

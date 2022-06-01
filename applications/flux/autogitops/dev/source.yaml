@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: demo
+    branch: main
   secretRef:
     name: flux-system
   url: https://github.com/{{gitops.repo}}
