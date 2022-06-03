@@ -105,8 +105,8 @@ git pull
 # --prune true \
 # --interval 1m
 
-flux create secret git flux-system -n flux-system --url https://github.com/microsoft/coral-gitops -u gitops -p "$AKDC_PAT"
-flux create secret git gitops -n flux-system --url https://github.com/microsoft/coral-gitops -u gitops -p "$AKDC_PAT"
+flux create secret git flux-system -n flux-system --url "https://github.com/$AKDC_REPO" -u gitops -p "$AKDC_PAT"
+flux create secret git gitops -n flux-system --url "https://github.com/$AKDC_REPO" -u gitops -p "$AKDC_PAT"
 
 kubectl apply -f "$HOME/gitops/deploy/flux/$AKDC_CLUSTER/flux-system/dev/flux-system/controllers.yaml"
 sleep 3
